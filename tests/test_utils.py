@@ -23,9 +23,9 @@ class UtilsTest(unittest.TestCase):
         self.assertIn("page=2", taobao_search_url("汉服", 2))
         self.assertIn("s=44", taobao_search_url("汉服", 2))
 
-    def test_default_config_pages_until_limit(self):
+    def test_default_config_plan_b_trial_scope(self):
         config = load_config("config.yaml")
-        self.assertEqual(config["limit_products"], 100)
+        self.assertEqual(config["limit_products"], 2)
         self.assertIsNone(config["end_page"])
         self.assertGreaterEqual(config["max_product_pages"], 4)
 
