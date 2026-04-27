@@ -1,0 +1,29 @@
+# Runtime defaults for the Taobao hanfu crawler.
+# The lightweight parser supports these top-level keys.
+keyword: 汉服
+# Full target scope: top 100 products by sales.
+limit_products: 100
+start_page: 1
+# Leave end_page empty to keep paging until limit_products is reached.
+end_page: null
+max_product_pages: 10
+products_per_page: 50
+reviews_per_product: 100
+# Safer default after Taobao returned deny_h5 for direct search URLs:
+# open Taobao once, then let the user manually confirm each search result page.
+manual_product_navigation: true
+auto_search_keyword: true
+require_keyword_on_product_page: true
+click_sales_sort: false
+headless: false
+slow_mo_ms: 150
+timeout_ms: 30000
+min_delay_seconds: 2
+max_delay_seconds: 6
+scroll_steps: 4
+review_page_only: true
+profile_dir: .browser-profile
+data_dir: data
+output_dir: output
+products_excel: hanfu_products.xlsx
+reviews_excel: hanfu_reviews.xlsx

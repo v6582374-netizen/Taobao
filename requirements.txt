@@ -1,0 +1,7 @@
+# Install inside a virtual environment, not globally:
+#   python3 -m venv .venv
+#   source .venv/bin/activate
+#   python -m pip install -r requirements.txt
+playwright>=1.44
+jieba>=0.42
+

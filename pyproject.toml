@@ -1,0 +1,11 @@
+[project]
+name = "taobao-hanfu-spider"
+version = "0.1.0"
+description = "Manual-login Taobao hanfu product and review crawler with Excel exports."
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+

@@ -1,0 +1,5 @@
+jsonp_tb_rate({"rateDetail":{"rateList":[
+  {"rateContent":"面料舒服，版型很显瘦，发货也快","displayUserNick":"买家A","rateDate":"2026-04-01","auctionSku":"M码","score":"5"},
+  {"rateContent":"色差有点明显，线头多，售后回复慢","displayUserNick":"买家B","rateDate":"2026-04-02","auctionSku":"L码","score":"2"}
+]}})
+
