@@ -1,13 +1,11 @@
 import tempfile
 import unittest
 from pathlib import Path
-from shutil import copyfile
 from zipfile import ZipFile
 
 from taobao_hanfu_spider.analysis import analyze_products, analyze_reviews
 from taobao_hanfu_spider.config import DEFAULT_CONFIG
 from taobao_hanfu_spider.exporters import export_products, export_reviews
-from taobao_hanfu_spider.importers import import_products_from_directory, import_reviews_from_directory
 from taobao_hanfu_spider.products import extract_products_from_legacy_html, parse_detail_price
 from taobao_hanfu_spider.reviews import extract_review_body, looks_like_real_review, normalize_api_comment, parse_jsonp, parse_review_candidate
 from taobao_hanfu_spider.utils import canonical_item_url
@@ -103,32 +101,6 @@ class ParserAndExportTest(unittest.TestCase):
             canonical_item_url("//detail.tmall.com/item.htm?id=828614673880&skuId=2"),
             "https://detail.tmall.com/item.htm?id=828614673880",
         )
-
-    def test_import_products_from_saved_html_directory(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            imports = Path(tmp) / "imports" / "products"
-            imports.mkdir(parents=True)
-            copyfile("tests/fixtures/import_products_page.html", imports / "page_001.html")
-            products = import_products_from_directory({"imports_dir": str(Path(tmp) / "imports"), "limit_products": 2})
-            self.assertEqual(len(products), 2)
-            self.assertEqual(products[0]["price"], 68.0)
-            self.assertEqual(products[0]["item_url"], "https://item.taobao.com/item.htm?id=111111111111")
-            self.assertEqual(products[1]["price"], 299.0)
-
-    def test_import_reviews_from_saved_html_directory(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            item_id = "111111111111"
-            review_dir = Path(tmp) / "imports" / "reviews" / item_id
-            review_dir.mkdir(parents=True)
-            copyfile("tests/fixtures/import_review_page.html", review_dir / "page_001.html")
-            products = [{"item_id": item_id, "title": "汉服宋制褙子日常春夏款"}]
-            reviews = import_reviews_from_directory({"imports_dir": str(Path(tmp) / "imports"), "reviews_per_product": 100}, products)
-            ok_reviews = [review for review in reviews if review["crawl_status"] == "ok"]
-            self.assertEqual(len(ok_reviews), 2)
-            self.assertEqual(ok_reviews[0]["user_nickname"], "辣**极")
-            self.assertEqual(ok_reviews[0]["comment_time"], "2026年4月10日")
-            self.assertIn("已购：M", ok_reviews[0]["sku_info"])
-            self.assertEqual(ok_reviews[0]["comment_text"], "面料品质：舒服 上身效果：好 厚薄度：适中。")
 
     def test_export_xlsx_files(self):
         products = [

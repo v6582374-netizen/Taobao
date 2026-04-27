@@ -8,7 +8,6 @@ from .analysis import analyze_products, analyze_reviews
 from .browser import BrowserSession, pause_for_manual_login
 from .config import data_path, load_config, output_path
 from .exporters import export_products, export_reviews
-from .importers import import_products_from_directory, import_reviews_from_directory
 from .products import ProductCrawler
 from .reviews import ReviewCrawler
 from .utils import read_json, write_json
@@ -46,27 +45,12 @@ def cmd_crawl_products(config: dict[str, Any]) -> list[dict[str, Any]]:
     return products
 
 
-def cmd_import_products(config: dict[str, Any]) -> list[dict[str, Any]]:
-    products = import_products_from_directory(config)
-    write_json(data_path(config, PRODUCTS_CACHE), products)
-    print(f"已导入商品缓存：{data_path(config, PRODUCTS_CACHE)}，共 {len(products)} 条。")
-    return products
-
-
 def cmd_crawl_reviews(config: dict[str, Any]) -> list[dict[str, Any]]:
     products = _load_products(config)
     crawler = ReviewCrawler(config)
     reviews = [asdict(review) for review in crawler.crawl(products)]
     write_json(data_path(config, REVIEWS_CACHE), reviews)
     print(f"已保存评论缓存：{data_path(config, REVIEWS_CACHE)}，共 {len(reviews)} 条。")
-    return reviews
-
-
-def cmd_import_reviews(config: dict[str, Any]) -> list[dict[str, Any]]:
-    products = read_json(data_path(config, PRODUCTS_CACHE), default=[])
-    reviews = import_reviews_from_directory(config, products)
-    write_json(data_path(config, REVIEWS_CACHE), reviews)
-    print(f"已导入评论缓存：{data_path(config, REVIEWS_CACHE)}，共 {len(reviews)} 条。")
     return reviews
 
 
@@ -96,8 +80,6 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("login", help="打开真实浏览器，手动登录淘宝并保存登录态")
     subparsers.add_parser("crawl-products", help="采集淘宝汉服商品前100")
     subparsers.add_parser("crawl-reviews", help="基于商品缓存采集评论")
-    subparsers.add_parser("import-products", help="从 imports/products/*.html 导入商品")
-    subparsers.add_parser("import-reviews", help="从 imports/reviews/<item_id>/*.html 导入评论")
     subparsers.add_parser("export", help="基于缓存导出两个核心 Excel 文件")
     subparsers.add_parser("run-all", help="依次执行商品、评论、导出")
     return parser
@@ -111,15 +93,12 @@ def main(argv: list[str] | None = None) -> None:
         cmd_login(config)
     elif args.command == "crawl-products":
         cmd_crawl_products(config)
-    elif args.command == "import-products":
-        cmd_import_products(config)
     elif args.command == "crawl-reviews":
         cmd_crawl_reviews(config)
-    elif args.command == "import-reviews":
-        cmd_import_reviews(config)
     elif args.command == "export":
         cmd_export(config)
     elif args.command == "run-all":
         cmd_run_all(config)
     else:
         parser.error(f"未知命令：{args.command}")
+

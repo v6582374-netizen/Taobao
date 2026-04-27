@@ -6,13 +6,12 @@ from typing import Any
 
 DEFAULT_CONFIG: dict[str, Any] = {
     "keyword": "汉服",
-    "limit_products": 2,
+    "limit_products": 100,
     "start_page": 1,
     "end_page": None,
     "max_product_pages": 10,
     "products_per_page": 50,
     "reviews_per_product": 100,
-    "imports_dir": "imports",
     "manual_product_navigation": True,
     "auto_search_keyword": True,
     "require_keyword_on_product_page": True,

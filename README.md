@@ -21,24 +21,6 @@ python -m playwright install chromium
 
 ## 使用流程
 
-账号被风控时，优先使用 Plan B 的本地 HTML 导入流程：
-
-```bash
-source .venv/bin/activate
-python -m taobao_hanfu_spider import-products
-python -m taobao_hanfu_spider import-reviews
-python -m taobao_hanfu_spider export
-```
-
-本次 Plan B 默认只导入 2 个商品。请手动保存页面到：
-
-- 商品搜索页：`imports/products/page_001.html`
-- 评价页：`imports/reviews/<item_id>/page_001.html`
-
-`imports/` 已被 `.gitignore` 忽略，不会上传到远程仓库。
-
-浏览器自动化流程仍保留，账号恢复后可继续使用：
-
 ```bash
 source .venv/bin/activate
 python -m taobao_hanfu_spider login
@@ -55,7 +37,7 @@ python -m taobao_hanfu_spider run-all
 
 ## 输出内容
 
-当前 Plan B 默认尝试范围为 2 件商品。商品表的 `notes` 会写入 `import_file=...`，用于确认每条商品来自哪个本地页面。
+当前默认恢复为最初目标：按销量采集“汉服”前 100 件商品。商品表的 `notes` 会写入 `source_page=...`，用于确认每条商品来自哪个搜索结果页。
 
 由于淘宝对直跳 `s.taobao.com/search` 可能直接返回 `deny_h5` 风控页，商品采集默认启用人工导航模式：
 
@@ -74,7 +56,7 @@ python -m taobao_hanfu_spider run-all
 ## 注意事项
 
 - 淘宝搜索和评论接口存在风控，运行过程中如果出现登录页、验证码或 `deny_h5`，请在打开的浏览器中手动处理到正常商品列表页后回到终端继续。
-- 当前 Plan B 范围由 `config.yaml` 控制：`limit_products: 2`、`reviews_per_product: 100`、`imports_dir: imports`。
+- 当前采集范围由 `config.yaml` 控制：`manual_product_navigation: true`、`auto_search_keyword: true`、`limit_products: 100`、`start_page: 1`、`end_page: null`、`max_product_pages: 10`、`products_per_page: 50`、`reviews_per_product: 100`。
 - 评论不可采时会在评论表中写入失败原因，不用后续商品替补。
 - 项目默认低频抓取，配置在 `config.yaml` 中调整。
 - 开源项目仅作为调研参考，本实现没有直接复制无明确授权的代码。
